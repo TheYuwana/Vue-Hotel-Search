@@ -2,6 +2,10 @@
   <div class="wrapper">
 
     <Search @button-action="searchHotels" />
+
+    <p>Sorting:</p>
+    <FilterButton icon="rating" @button-action="sortHotels" />
+
     <div class="hotels">
     	<HotelCard v-for="hotel in filteredHotels" :hotel="hotel" />
     </div>
@@ -12,12 +16,14 @@
 <script>
 import Search from '@/components/Search.vue'
 import HotelCard from '@/components/HotelCard.vue'
+import FilterButton from '@/components/FilterButton.vue'
 
 export default {
   name: 'home',
   components: {
     Search,
-    HotelCard
+    HotelCard,
+    FilterButton
   },
   data () {
     return {
@@ -72,6 +78,21 @@ export default {
   			this.filteredHotels = this.hotels.filter(hotel => {
   				return hotel.title.includes(value)
   			})
+  		}
+  	},
+  	sortHotels(sorting){
+  		if(sorting.type != ""){
+  			switch(sorting.type){
+  				case "rating": 
+  					this.filteredHotels = this.filteredHotels.sort(function(hotA, hotB) {
+  						if(sorting.direction == "asc"){
+  							return hotA.stars - hotB.stars;
+  						}else{
+  							return hotB.stars - hotA.stars;
+  						}
+					});
+  				break;
+  			}
   		}
   	}
   }
